@@ -1,0 +1,14 @@
+{
+  "name": "mybackend",
+  "version": "1.0.0",
+  "description": "for MyProject backend used (backend code with node)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nicholas Tey <jian000209@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
