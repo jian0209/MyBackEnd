@@ -1,0 +1,35 @@
+{
+  "env": {
+    // 1
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": ["eslint:recommended", "prettier"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    // 3
+    "ecmaVersion": 12, // 4
+    "sourceType": "module" // 5
+  },
+
+  "rules": {
+    // 6
+    // allow async-await
+    "generator-star-spacing": "off",
+    // allow paren-less arrow functions
+    "arrow-parens": "off",
+    "one-var": "off",
+    "no-void": "off",
+    "multiline-ternary": "off",
+
+    "no-unused-vars": "error",
+    "no-dupe-else-if": "error",
+    "no-dupe-keys": "error",
+    "no-use-before-define": "error",
+
+    "default-case": "error",
+
+    "prefer-promise-reject-errors": "off"
+  }
+}
