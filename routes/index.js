@@ -54,7 +54,7 @@ router.post('/user/info', async function (req, res, next) {
   }
 })
 
-router.post('/user/create', async function (req, res, next) {
+router.get('/user/create', async function (req, res, next) {
   const reqBody = req.body
   if (
     reqBody.userName &&
