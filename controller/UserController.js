@@ -5,7 +5,9 @@ import {
   AddUser,
   AddToken,
   RemoveToken,
-  GetUserInfoList
+  GetUserInfoList,
+  GetUserInfoByName,
+  GetUserInfoByEmail
 } from '../model/UserModel'
 import { v4 } from 'uuid'
 import moment from 'moment'
@@ -23,13 +25,14 @@ export const CheckLogin = async (token, id) => {
 
 export const CreateToken = async (tokenParam) => {
   const token =
-    v4().split('-')[0] + v4().split('-')[0] + CryptoJS.MD5(tokenParam.userId)
+    v4().split('-')[0] + v4().split('-')[0] + CryptoJS.MD5(tokenParam)
   let param = {
-    UserId: tokenParam.userId,
+    UserId: tokenParam,
     TokenId: token,
     CreatedAt: moment().unix()
   }
   AddToken(param)
+  return token
 }
 
 export const DeleteToken = async (id) => {
@@ -41,15 +44,28 @@ export const Login = async (userParam) => {
     username: userParam.userName,
     password: CryptoJS.MD5(userParam.password).toString()
   }
+  let resMsg
   await GetUserInfoList(param).then((res) => {
     if (res.length < 1) {
       // record not found
-      return utils.RECORD_NOT_FOUND
+      resMsg = 'Username or Password is invalid'
     } else {
-      CreateToken(res.UserId)
-      return res
+      // record found and generate token
+      const token = CreateToken(res[0].UserId)
+      resMsg = res
+      resMsg.token = token
     }
   })
+  return resMsg
+}
+
+/**
+ * example
+ * @param {string} s
+ * @return {boolean}
+ */
+export const Logout = async (userParam) => {
+  DeleteToken(userParam.userId)
 }
 
 export const GetUserInfo = async (id) => {
@@ -61,6 +77,29 @@ export const GetUserInfo = async (id) => {
   } else {
     // record found
     return result
+  }
+}
+
+export const GetUsername = async (name) => {
+  let result = await GetUserInfoByName(name)
+
+  if (result.length < 1) {
+    // record not found
+    return true
+  } else {
+    // record found
+    return false
+  }
+}
+
+export const GetEmail = async (email) => {
+  let result = await GetUserInfoByEmail(email)
+  if (result.length < 1) {
+    // record not found
+    return true
+  } else {
+    // record found
+    return false
   }
 }
 
@@ -76,6 +115,16 @@ export const CreateUser = async (userParam) => {
     Email: userParam.email,
     DeletedAt: null
   }
-  await AddUser(param)
-  // console.log(param)
+  if (await GetUsername(param.UserName)) {
+    if (await GetEmail(param.Email)) {
+      await AddUser(param)
+      return 'User created successfully'
+    } else {
+      // email is not unique
+      return 'Email exist'
+    }
+  } else {
+    // username is not unique
+    return 'Username exist'
+  }
 }

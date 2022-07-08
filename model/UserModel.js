@@ -48,6 +48,38 @@ export const GetUserInfoById = async (id) => {
   return result
 }
 
+export const GetUserInfoByName = async (name) => {
+  let result
+  await client
+    .connect()
+    .then((client) =>
+      client
+        .db('User')
+        .collection('UserInfo')
+        .find({ UserName: name })
+        .toArray()
+    )
+    .then((cols) => (result = cols))
+    .catch((e) => console.error(e))
+    .finally(() => client.close())
+
+  return result
+}
+
+export const GetUserInfoByEmail = async (email) => {
+  let result
+  await client
+    .connect()
+    .then((client) =>
+      client.db('User').collection('UserInfo').find({ Email: email }).toArray()
+    )
+    .then((cols) => (result = cols))
+    .catch((e) => console.error(e))
+    .finally(() => client.close())
+
+  return result
+}
+
 export const GetUserInfoList = async (userParam) => {
   let result
   await client

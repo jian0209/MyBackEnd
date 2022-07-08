@@ -2,7 +2,9 @@ import moment from 'moment'
 import {
   CheckLogin,
   GetUserInfo,
-  CreateUser
+  CreateUser,
+  Login,
+  Logout
 } from '../controller/UserController'
 import { GetTaskList, CreateTask } from '../controller/TaskController'
 import { utils } from '../utils/constant'
@@ -61,10 +63,10 @@ router.post('/user/create', async function (req, res, next) {
     reqBody.lastName &&
     reqBody.email
   ) {
-    await CreateUser(reqBody).then(() => {
+    await CreateUser(reqBody).then((msg) => {
       res.send({
         success: true,
-        message: 'User Created Successfully'
+        message: msg
       })
     })
   } else {
@@ -74,6 +76,33 @@ router.post('/user/create', async function (req, res, next) {
       message: 'Invalid Param'
     })
   }
+})
+
+router.post('/user/login', async function (req, res, next) {
+  const reqBody = req.body
+  if (reqBody.userName && reqBody.password) {
+    await Login(reqBody).then((msg) => {
+      res.send({
+        success: true,
+        message: msg
+      })
+    })
+  } else {
+    // required param failed
+    res.send({
+      success: false,
+      message: 'Invalid Param'
+    })
+  }
+})
+
+router.post('/user/logout', async function (req, res, next) {
+  await Logout(req.body).then((msg) => {
+    res.send({
+      success: true,
+      message: msg
+    })
+  })
 })
 
 router.post('/task/list', async function (req, res, next) {
