@@ -52,6 +52,7 @@ response in json format
   messageJson: object
 }
 */
+
 /* 
 http://127.0.0.1/api/user/create
 method: post
@@ -70,6 +71,7 @@ response in json format
   message: string
 }
 */
+
 /* 
 http://127.0.0.1/api/user/login
 method: post
@@ -85,6 +87,7 @@ response in json format
   message: string
 }
 */
+
 /* 
 http://127.0.0.1/api/user/logout
 method: post
@@ -99,3 +102,4 @@ response in json format
   message: string
 }
 */
+```
