@@ -45,15 +45,18 @@ export const Login = async (userParam) => {
     password: CryptoJS.MD5(userParam.password).toString()
   }
   let resMsg
-  await GetUserInfoList(param).then((res) => {
+  let tempToken
+  await GetUserInfoList(param).then(async (res) => {
     if (res.length < 1) {
       // record not found
       resMsg = 'Username or Password is invalid'
     } else {
       // record found and generate token
-      const token = CreateToken(res[0].UserId)
-      resMsg = res
-      resMsg.token = token
+      await CreateToken(res[0].UserId).then((res) => {
+        tempToken = res
+      })
+      resMsg = res[0]
+      resMsg.token = tempToken
     }
   })
   return resMsg
@@ -65,6 +68,7 @@ export const Login = async (userParam) => {
  * @return {boolean}
  */
 export const Logout = async (userParam) => {
+  console.log(userParam)
   DeleteToken(userParam.userId)
 }
 

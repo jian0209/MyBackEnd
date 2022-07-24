@@ -7,6 +7,7 @@ import {
   Logout
 } from '../controller/UserController'
 import { GetTaskList, CreateTask } from '../controller/TaskController'
+import { GetUserInfoByName } from '../model/UserModel'
 import { utils } from '../utils/constant'
 
 var express = require('express')
@@ -55,6 +56,7 @@ router.post('/user/info', async function (req, res, next) {
 })
 
 router.post('/user/create', async function (req, res, next) {
+  console.log(req.body)
   const reqBody = req.body
   if (
     reqBody.userName &&
@@ -78,14 +80,39 @@ router.post('/user/create', async function (req, res, next) {
   }
 })
 
+router.post('/user/checkUsername', async function (req, res, next) {
+  const reqBody = req.body
+  console.log(reqBody)
+  await GetUserInfoByName(reqBody.userName).then((msg) => {
+    if (msg.length > 0) {
+      res.send({
+        success: false,
+        message: 'Username existed'
+      })
+    } else {
+      res.send({
+        success: true
+      })
+    }
+  })
+})
+
 router.post('/user/login', async function (req, res, next) {
   const reqBody = req.body
   if (reqBody.userName && reqBody.password) {
     await Login(reqBody).then((msg) => {
-      res.send({
-        success: true,
-        message: msg
-      })
+      console.log(msg)
+      if (typeof msg == 'string') {
+        res.send({
+          success: false,
+          message: msg
+        })
+      } else {
+        res.send({
+          success: true,
+          message: msg
+        })
+      }
     })
   } else {
     // required param failed
